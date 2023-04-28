@@ -71,13 +71,15 @@ export const App: React.FC = () => {
   }, []);
 
   function getImage(name: string) {
-    return {
-      facebook: facebook,
-      linkedin: linkedin,
-      tiktok: tiktok,
-      github: github,
-      instagram: instagram,
-    }[name];
+    return (
+      {
+        facebook: facebook,
+        linkedin: linkedin,
+        tiktok: tiktok,
+        github: github,
+        instagram: instagram,
+      }[name] || null
+    );
   }
 
   function isValidURL(url: string) {
@@ -90,19 +92,23 @@ export const App: React.FC = () => {
         '(\\#[-a-z\\d_]*)?$',
       'i'
     ); // fragmento
-
+    console.log(url);
     return pattern.test(url);
   }
 
   function renderContent(data: any) {
     return Object.entries(data).map(([key, value]: any) => {
       if (isValidURL(value)) {
-        return <SocialLink link={value} path={getImage(key)} username={key} />;
+        if (getImage(key)) {
+          return (
+            <SocialLink link={value} path={getImage(key)} username={key} />
+          );
+        }
       }
       return null;
     });
   }
-
+  console.log(allSeriesData);
   return (
     <>
       <Container>
@@ -146,7 +152,7 @@ const Container = styled.div`
   justify-content: center;
   text-align: center;
   position: relative;
-  
+
   h1 {
     color: #ffff;
     font-size: 32px;
