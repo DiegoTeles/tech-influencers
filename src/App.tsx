@@ -14,7 +14,7 @@ const REACT_APP_GOOGLE_SHEETS_ID =
 
 interface SocialProps {
   link: string;
-  path: string;
+  path: any;
   username: string;
 }
 
