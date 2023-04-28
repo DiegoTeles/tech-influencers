@@ -87,7 +87,7 @@ export const App: React.FC = () => {
     );
   }
 
-  function isValidURL(url: string) {
+/*   function isValidURL(url: string) {
     const pattern = new RegExp(
       '^(https?:\\/\\/)?' + // protocolo
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domínio
@@ -98,7 +98,7 @@ export const App: React.FC = () => {
       'i'
     ); // fragmento
     return pattern.test(url);
-  }
+  } */
 
   function renderContent(data: any) {
     return Object.entries(data).map(([key, value]: any) => {
