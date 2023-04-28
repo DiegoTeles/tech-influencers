@@ -7,6 +7,7 @@ import instagram from './assets/instagram.png';
 import tiktok from './assets/tik-tok.png';
 import github from './assets/github.png';
 import linkedin from './assets/linkedin.png';
+import twitter from './assets/twitter.png';
 
 const REACT_APP_GOOGLE_API_KEY = 'AIzaSyCHo82SpOMn85aBPxhECu3BsbAdhV1BEMg';
 const REACT_APP_GOOGLE_SHEETS_ID =
@@ -78,6 +79,7 @@ export const App: React.FC = () => {
         tiktok: tiktok,
         github: github,
         instagram: instagram,
+        twitter: twitter,
       }[name] || null
     );
   }
@@ -92,7 +94,6 @@ export const App: React.FC = () => {
         '(\\#[-a-z\\d_]*)?$',
       'i'
     ); // fragmento
-    console.log(url);
     return pattern.test(url);
   }
 
@@ -108,7 +109,7 @@ export const App: React.FC = () => {
       return null;
     });
   }
-  console.log(allSeriesData);
+
   return (
     <>
       <Container>
@@ -188,7 +189,7 @@ const Card = styled.div`
   align-items: center;
   color: #000;
 
-  img {
+  > img {
     border-radius: 50%;
     border: 1px solid #ffff;
   }
