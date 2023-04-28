@@ -72,6 +72,7 @@ export const App: React.FC = () => {
     getAllSeries();
   }, []);
 
+  console.log('allSeriesData :>> ', allSeriesData);
   function getImage(name: string) {
     return (
       {
@@ -101,12 +102,8 @@ export const App: React.FC = () => {
 
   function renderContent(data: any) {
     return Object.entries(data).map(([key, value]: any) => {
-      if (isValidURL(value)) {
-        if (getImage(key)) {
-          return (
-            <SocialLink link={value} path={getImage(key)} username={key} />
-          );
-        }
+      if (getImage(key)) {
+        return <SocialLink link={value} path={getImage(key)} username={key} />;
       }
       return null;
     });
