@@ -112,7 +112,7 @@ export const App: React.FC = () => {
   return (
     <>
       <Container>
-        <h1>Tech Influencers</h1>
+        <h1>Tech Creators</h1>
         <Data>
           {allSeriesData.map((item: any, index: number) => (
             <>
