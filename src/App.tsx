@@ -102,7 +102,7 @@ export const App: React.FC = () => {
 
   function renderContent(data: any) {
     return Object.entries(data).map(([key, value]: any) => {
-      if (getImage(key)) {
+      if (getImage(key) && value) {
         return <SocialLink link={value} path={getImage(key)} username={key} />;
       }
       return null;
