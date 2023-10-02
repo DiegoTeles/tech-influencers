@@ -1,79 +1,78 @@
 /* eslint-disable no-prototype-builtins */
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import styled from 'styled-components';
-import facebook from './assets/facebook.png';
-import instagram from './assets/instagram.png';
-import tiktok from './assets/tik-tok.png';
-import github from './assets/github.png';
-import linkedin from './assets/linkedin.png';
-import twitter from './assets/twitter.png';
-import youtube from './assets/youtube.png';
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import styled from 'styled-components'
+import {
+  facebook,
+  github,
+  instagram,
+  linkedin,
+  twitter,
+  tiktok,
+  youtube,
+  userAvatar,
+} from './assets'
+import { SocialProps, PersonProps, SocialNetworksProps } from './types'
 
-const REACT_APP_GOOGLE_API_KEY = 'AIzaSyCHo82SpOMn85aBPxhECu3BsbAdhV1BEMg';
+const REACT_APP_GOOGLE_API_KEY = 'AIzaSyCHo82SpOMn85aBPxhECu3BsbAdhV1BEMg'
 const REACT_APP_GOOGLE_SHEETS_ID =
-  '1-9T5cAdNW5fxGqTD8M5GO10LrXNb_vI-FpatDWy-4tY';
+  '1-9T5cAdNW5fxGqTD8M5GO10LrXNb_vI-FpatDWy-4tY'
 
-interface SocialProps {
-  link: string;
-  path: any;
-  username: string;
-}
+const SocialLink = (props: SocialProps) => {
+  const { link, path, username } = props
 
-const SocialLink = ({ link, path, username }: SocialProps) => {
   return (
-    <a href={link} target='_blank'>
+    <a href={link} target="_blank">
       <div>
         <img src={path} alt={username} width={'36px'} />
       </div>
     </a>
-  );
-};
+  )
+}
 
 export const App: React.FC = () => {
-  const [allSeriesData, setAllSeriesData] = useState([]);
+  const [allSeriesData, setAllSeriesData] = useState([])
 
   function getAllSeries() {
-    const SHEET_ID = REACT_APP_GOOGLE_SHEETS_ID;
-    const SHEET_NAME = 'Sheet1';
-    const API_KEY = REACT_APP_GOOGLE_API_KEY;
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?valueRenderOption=FORMATTED_VALUE&key=${API_KEY}`;
+    const SHEET_ID = REACT_APP_GOOGLE_SHEETS_ID
+    const SHEET_NAME = 'Sheet1'
+    const API_KEY = REACT_APP_GOOGLE_API_KEY
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?valueRenderOption=FORMATTED_VALUE&key=${API_KEY}`
 
     axios
       .get(url)
       .then(function (response) {
         // handle success
-        formatResponse(response.data);
+        formatResponse(response.data)
       })
       .catch(function (error) {
         // handle error
-        onError(error);
+        onError(error)
       })
       .finally(function () {
         // always executed
-        console.log('ALL DONE LOADING DATA');
-      });
+        console.log('ALL DONE LOADING DATA')
+      })
   }
 
-  function formatResponse(response: any) {
-    const keys = response.values[0];
-    const data = response.values.slice(1);
+  function formatResponse(response: PersonProps) {
+    const keys = response.values[0]
+    const data = response.values.slice(1)
     const obj = data.map((arr: any) =>
       Object.assign({}, ...keys.map((k: any, i: any) => ({ [k]: arr[i] })))
-    );
-    setAllSeriesData(obj);
+    )
+    setAllSeriesData(obj)
   }
 
-  function onError(error: any) {
-    console.error(error);
+  function onError(error: Error) {
+    console.error(error)
   }
 
   useEffect(() => {
-    getAllSeries();
-  }, []);
+    getAllSeries()
+  }, [])
 
-  console.log('allSeriesData :>> ', allSeriesData);
-  function getImage(name: string) {
+  function getImage(name: string): string {
     return (
       {
         facebook: facebook,
@@ -83,30 +82,30 @@ export const App: React.FC = () => {
         instagram: instagram,
         twitter: twitter,
         youtube: youtube,
-      }[name] || null
-    );
+      }[name] || ''
+    )
   }
 
-/*   function isValidURL(url: string) {
-    const pattern = new RegExp(
-      '^(https?:\\/\\/)?' + // protocolo
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domínio
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // IP
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // caminho
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // parâmetros de consulta
-        '(\\#[-a-z\\d_]*)?$',
-      'i'
-    ); // fragmento
-    return pattern.test(url);
-  } */
-
-  function renderContent(data: any) {
-    return Object.entries(data).map(([key, value]: any) => {
-      if (getImage(key)) {
-        return <SocialLink link={value} path={getImage(key)} username={key} />;
+  function renderContent(data: PersonProps) {
+    return Object.entries(data).map(([key, value]) => {
+      if (
+        value !== '' &&
+        value !== '#' &&
+        value !== undefined &&
+        getImage(key)
+      ) {
+        return (
+          <SocialLink
+            link={value}
+            path={getImage(key)}
+            username={key}
+            key={key}
+          />
+        )
       }
-      return null;
-    });
+
+      return null
+    })
   }
 
   return (
@@ -114,35 +113,33 @@ export const App: React.FC = () => {
       <Container>
         <h1>Tech Creators</h1>
         <Data>
-          {allSeriesData.map((item: any, index: number) => (
-            <>
-              <Card key={index}>
-                <img
-                  src={item.photo}
-                  alt={item.name}
-                  width='100px'
-                  height='100px'
-                />
-                <h2>{item.name}</h2>
-                <span>@{item.username}</span>
-                <small>{item.role}</small>
+          {allSeriesData.map((item: PersonProps & SocialNetworksProps) => {
+            const { photo, name, username, role } = item
+            const photoUrl = photo || userAvatar
+
+            return (
+              <Card key={name}>
+                <img src={photoUrl} alt={name} width="100px" height="100px" />
+                <h2>{name}</h2>
+                <span>@{username}</span>
+                <small>{role}</small>
                 <SocialContainer>{renderContent(item)}</SocialContainer>
               </Card>
-            </>
-          ))}
+            )
+          })}
         </Data>
         <Footer>
           <p>
             Created by 🦄
-            <a href='https://instagram.com/unicornCoder' target='_blank'>
+            <a href="https://instagram.com/unicornCoder" target="_blank">
               @UnicornCoder
             </a>
           </p>
         </Footer>
       </Container>
     </>
-  );
-};
+  )
+}
 
 const Container = styled.div`
   font-family: 'Nunito', sans-serif;
@@ -157,7 +154,7 @@ const Container = styled.div`
     color: #ffff;
     font-size: 32px;
   }
-`;
+`
 
 const Data = styled.div`
   font-family: 'Nunito', sans-serif;
@@ -168,24 +165,26 @@ const Data = styled.div`
   gap: 40px;
   margin-bottom: 70px;
 
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: 1280px) {
     grid-template-columns: repeat(3, minmax(0px, 1fr));
   }
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 1024px) {
     grid-template-columns: repeat(2, minmax(0px, 1fr));
   }
-  @media only screen and (max-width: 480px) {
+  @media only screen and (max-width: 768px) {
     grid-template-columns: repeat(1, minmax(0px, 1fr));
   }
-`;
+`
 
 const Card = styled.div`
+  min-width: 150px;
   padding: 30px 16px;
   background-color: aliceblue;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-around;
   color: #000;
 
   > img {
@@ -204,7 +203,7 @@ const Card = styled.div`
   small {
     font-size: medium;
   }
-`;
+`
 
 const SocialContainer = styled.div`
   background-color: aliceblue;
@@ -223,7 +222,7 @@ const SocialContainer = styled.div`
   > img {
     width: 26px;
   }
-`;
+`
 
 const Footer = styled.div`
   font-family: 'Nunito', sans-serif;
@@ -239,4 +238,4 @@ const Footer = styled.div`
     color: #ffff;
     text-decoration: none;
   }
-`;
+`
